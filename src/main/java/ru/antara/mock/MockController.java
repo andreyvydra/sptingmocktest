@@ -13,7 +13,6 @@ import ru.antara.mock.response.ResponseSettings;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -23,7 +22,7 @@ public class MockController {
 
     private final Logger logger = LoggerFactory.getLogger(MockController.class);
 
-    private long timeSleep = 1000L;
+    private long timeSleep = 1L;
     private long timeOut = 10000L;
 
     public final ResponseProducts data = new ResponseProducts(Status.SUCCESS,
@@ -49,9 +48,9 @@ public class MockController {
                         throw new RuntimeException(e);
                     }
                     return data;
-                }).
-                completeOnTimeout(new ResponseProducts(Status.ERROR, new ArrayList<>()), timeOut, TimeUnit.MILLISECONDS).
-                thenApply(responseProducts -> {
+                })
+                .completeOnTimeout(new ResponseProducts(Status.ERROR, new ArrayList<>()), timeOut, TimeUnit.MILLISECONDS)
+                .thenApply(responseProducts -> {
                     if (responseProducts.status().equals(Status.ERROR)) {
                         logger.error("TIMEOUT GET");
                     } else {
@@ -71,9 +70,9 @@ public class MockController {
                         throw new RuntimeException(e);
                     }
                     return new ResponsePostData(Status.SUCCESS, "Всё ок!");
-                }).
-                completeOnTimeout(new ResponsePostData(Status.ERROR, "Слишком долго"), timeOut, TimeUnit.MILLISECONDS).
-                thenApply(responsePostData -> {
+                })
+                .completeOnTimeout(new ResponsePostData(Status.ERROR, "Слишком долго"), timeOut, TimeUnit.MILLISECONDS)
+                .thenApply(responsePostData -> {
                     if (responsePostData.status().equals(Status.ERROR)) {
                         logger.error("TIMEOUT ADDED: " + product);
                     } else {
